@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
+import { Producto } from './entities/producto.entity';
 
 @Injectable()
 export class ProductosService {
-  create(createProductoDto: CreateProductoDto) {
-    return 'This action adds a new producto';
+  constructor(
+    @InjectRepository(Producto)
+    private readonly productoRepository: Repository<Producto>,
+  ) {}
+
+  create(createProductoDto: CreateProductoDto): Promise<Producto> {
+    const producto = this.productoRepository.create(createProductoDto);
+    return this.productoRepository.save(producto);
   }
 
-  findAll() {
-    return `This action returns all productos`;
+  findAll(): Promise<Producto[]> {
+    return this.productoRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} producto`;
+  async findOne(id: number): Promise<Producto> {
+    const producto = await this.productoRepository.findOneBy({ id });
+    if (!producto) {
+      throw new NotFoundException(`Producto con ID ${id} no encontrado`);
+    }
+    return producto;
   }
 
-  update(id: number, updateProductoDto: UpdateProductoDto) {
-    return `This action updates a #${id} producto`;
+  async update(id: number, updateProductoDto: UpdateProductoDto): Promise<Producto> {
+    const producto = await this.productoRepository.preload({
+      id: id,
+      ...updateProductoDto,
+    });
+    if (!producto) {
+      throw new NotFoundException(`Producto con ID ${id} no encontrado`);
+    }
+    return this.productoRepository.save(producto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} producto`;
+  async remove(id: number): Promise<{ message: string }> {
+    const result = await this.productoRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Producto con ID ${id} no encontrado`);
+    }
+    return { message: `Producto con ID ${id} eliminado correctamente.` };
   }
 }
