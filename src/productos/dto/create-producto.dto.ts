@@ -13,7 +13,7 @@ export class CreateProductoDto {
 
   @IsArray()
   @IsString({ each: true })
-  @ArrayMinSize(1)
+  @ArrayMinSize(0)
   @IsOptional()
   mermasConfig?: string[]; // Ejemplo: ["Cordón", "Bolsa", "Desgorde"]
 }

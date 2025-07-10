@@ -11,6 +11,7 @@ export class ProcesamientoController {
   create(@Body() createProcesamientoDto: CreateProcesamientoDto) {
     return this.procesamientoService.create(createProcesamientoDto);
   }
+  
 
   @Get()
   findAll() {

@@ -40,7 +40,7 @@ export class LotesService {
 
   async procesarLote(id: number, createProcesamientoDto: CreateProcesamientoDto): Promise<Lote> {
     const lote = await this.findOne(id);
-
+   
     if (lote.estado === 'Finalizado') {
         throw new Error('Este lote ya ha sido procesado.');
     }

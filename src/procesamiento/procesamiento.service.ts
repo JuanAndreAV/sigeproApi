@@ -1,15 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import {  Injectable } from '@nestjs/common';
 import { CreateProcesamientoDto } from './dto/create-procesamiento.dto';
 import { UpdateProcesamientoDto } from './dto/update-procesamiento.dto';
+import { Repository } from 'typeorm';
+import { Procesamiento } from './entities/procesamiento.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ProcesamientoService {
+  constructor(
+    @InjectRepository(Procesamiento)
+    private readonly procesamientoRepository: Repository<Procesamiento>
+  ){
+
+  }
   create(createProcesamientoDto: CreateProcesamientoDto) {
     return 'This action adds a new procesamiento';
   }
 
-  findAll() {
-    return `This action returns all procesamiento`;
+  findAll(): Promise<Procesamiento[]> {
+    return this.procesamientoRepository.find() ;
   }
 
   findOne(id: number) {

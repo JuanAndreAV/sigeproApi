@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, ParseIntPipe } from '@nestjs/common';
 import { LotesService } from './lotes.service';
 import { CreateLoteDto } from './dto/create-lote.dto';
 import { CreateProcesamientoDto } from 'src/procesamiento/dto/create-procesamiento.dto';
+
 
 @Controller('lotes')
 export class LotesController {
@@ -24,7 +25,10 @@ export class LotesController {
 
   // Endpoint especial para procesar un lote
   @Post(':id/procesar')
-  procesarLote(@Param('id') id: string, @Body() createProcesamientoDto: CreateProcesamientoDto) {
-      return this.lotesService.procesarLote(+id, createProcesamientoDto);
-  }
+procesarLote(
+  @Param('id', ParseIntPipe) id: number,
+  @Body() createProcesamientoDto: CreateProcesamientoDto,
+) {
+  return this.lotesService.procesarLote(id, createProcesamientoDto);
+}
 }
