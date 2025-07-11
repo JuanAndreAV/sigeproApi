@@ -40,28 +40,35 @@ export class LotesService {
 
   async procesarLote(id: number, createProcesamientoDto: CreateProcesamientoDto): Promise<Lote> {
     const lote = await this.findOne(id);
-   
+
     if (lote.estado === 'Finalizado') {
         throw new Error('Este lote ya ha sido procesado.');
     }
 
+    // --- Cálculos (se mantienen igual) ---
     const totalMermas = Object.values(createProcesamientoDto.mermasDetalle).reduce((sum, current) => sum + current, 0);
     const pesoNeto = lote.pesoIngresoKg - totalMermas;
     const rendimiento = (pesoNeto / lote.pesoIngresoKg) * 100;
 
+    // 1. Crea la instancia de Procesamiento, pero NO la guardes todavía.
     const nuevoProcesamiento = this.procesamientoRepository.create({
         ...createProcesamientoDto,
-        lote: lote,
         usuarioProceso: { id: createProcesamientoDto.usuarioProcesoId },
         fechaProcesamiento: new Date(),
         pesoNetoFinalKg: pesoNeto,
         rendimientoCalculado: rendimiento,
     });
     
-    await this.procesamientoRepository.save(nuevoProcesamiento);
-
+    // 2. Asigna el nuevo procesamiento directamente al lote.
+    lote.procesamiento = nuevoProcesamiento;
+    
+    // 3. Actualiza el estado del lote.
     lote.estado = 'Finalizado';
+
+    // 4. Guarda el LOTE. Gracias a "cascade: true", TypeORM hará dos cosas:
+    //    a) Insertará el nuevo registro en la tabla "procesamientos" (con el lote_id correcto).
+    //    b) Actualizará el registro existente en la tabla "lotes" (cambiando el estado).
     return this.loteRepository.save(lote);
-  }
+}
 }
 

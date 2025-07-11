@@ -18,7 +18,20 @@ export class ProcesamientoService {
   }
 
   findAll(): Promise<Procesamiento[]> {
-    return this.procesamientoRepository.find() ;
+    return this.procesamientoRepository.find({
+     relations: ['lote'],
+      //  relations: {
+      //   lote: {
+         
+      //    proveedor: true,
+      //    producto: true,
+      //  },
+      //  },
+      order: {
+        // Opcional: Ordenar por los más recientes primero
+        fechaProcesamiento: 'DESC',
+      },
+    });
   }
 
   findOne(id: number) {

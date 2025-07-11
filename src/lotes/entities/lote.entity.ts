@@ -47,7 +47,9 @@ export class Lote {
   @JoinColumn({ name: 'usuario_registro_id' })
   usuarioRegistro: Usuario;
 
-  @OneToOne(() => Procesamiento, procesamiento => procesamiento.lote)
+  @OneToOne(() => Procesamiento, procesamiento => procesamiento.lote, { cascade: true })
   procesamiento: Procesamiento;
+  // Dentro de la clase Lote
+
 }
 
