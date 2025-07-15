@@ -11,6 +11,7 @@ import { Lote } from './lotes/entities/lote.entity';
 import { Usuario } from './usuarios/entities/usuario.entity';
 import { Procesamiento } from './procesamiento/entities/procesamiento.entity';
 import { Producto } from './productos/entities/producto.entity';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 
 @Module({
@@ -30,7 +31,8 @@ import { Producto } from './productos/entities/producto.entity';
     ProveedoresModule,
     ProductosModule,
     UsuariosModule,
-    ProcesamientoModule],
+    ProcesamientoModule,
+    DashboardModule],
   controllers: [],
   providers: [],
 })
