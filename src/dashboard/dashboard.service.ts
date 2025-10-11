@@ -47,7 +47,7 @@ export class DashboardService {
       totalProveedores,
       rendimientoPorProveedor: rendimientoPorProveedor.map(item => ({
           nombre: item.nombre,
-          rendimiento: parseFloat(item.rendimiento).toFixed(2)
+          rendimiento: parseFloat(item.rendimiento)//.toFixed(2)
       }))
     };
   }

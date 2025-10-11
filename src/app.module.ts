@@ -12,17 +12,19 @@ import { Usuario } from './usuarios/entities/usuario.entity';
 import { Procesamiento } from './procesamiento/entities/procesamiento.entity';
 import { Producto } from './productos/entities/producto.entity';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost', // O la IP de tu servidor de BD
-      port: 5432, // Puerto por defecto de PostgreSQL
-      username: 'postgres', // Tu usuario de PostgreSQL
-      password: 'Ju@n1029', // ¡Cambia esto por tu contraseña!
-      database: 'sigepro_db', // El nombre de la base de datos que creaste
+      host: process.env.DB_HOST, // O la IP de tu servidor de BD
+      port: Number(process.env.DB_PORT), // Puerto por defecto de PostgreSQL
+      username: process.env.DB_USERNAME, // Tu usuario de PostgreSQL
+      password: process.env.DB_PASSWORD, // ¡Cambia esto por tu contraseña!
+      database: DB_DATABASE, // El nombre de la base de datos que creaste
       entities: [Proveedore, Lote, Usuario, Procesamiento, Producto], // Aquí irán tus entidades (tablas)
       autoLoadEntities: true, // Carga automáticamente las entidades definidas
       synchronize: true, // ¡Importante! Lee la nota de abajo.
