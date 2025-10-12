@@ -24,7 +24,7 @@ import { ConfigModule } from '@nestjs/config';
       port: Number(process.env.DB_PORT), // Puerto por defecto de PostgreSQL
       username: process.env.DB_USERNAME, // Tu usuario de PostgreSQL
       password: process.env.DB_PASSWORD, // ¡Cambia esto por tu contraseña!
-      database: DB_DATABASE, // El nombre de la base de datos que creaste
+      database: process.env.DB_DATABASE, // El nombre de la base de datos que creaste
       entities: [Proveedore, Lote, Usuario, Procesamiento, Producto], // Aquí irán tus entidades (tablas)
       autoLoadEntities: true, // Carga automáticamente las entidades definidas
       synchronize: true, // ¡Importante! Lee la nota de abajo.
