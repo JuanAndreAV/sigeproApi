@@ -13,6 +13,7 @@ import { Procesamiento } from './procesamiento/entities/procesamiento.entity';
 import { Producto } from './productos/entities/producto.entity';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ConfigModule } from '@nestjs/config';
+import { SeedModule } from './seed/seed.module';
 
 
 @Module({
@@ -26,15 +27,21 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.DB_PASSWORD, // ¡Cambia esto por tu contraseña!
       database: process.env.DB_DATABASE, // El nombre de la base de datos que creaste
       entities: [Proveedore, Lote, Usuario, Procesamiento, Producto], // Aquí irán tus entidades (tablas)
-      autoLoadEntities: true, // Carga automáticamente las entidades definidas
-      synchronize: true, // ¡Importante! Lee la nota de abajo.
+      //autoLoadEntities: true, // Carga automáticamente las entidades definidas
+      //synchronize: true, // ¡Importante! Lee la nota de abajo.
+       synchronize: process.env.NODE_ENV !== 'production', // Desactivado en producción
+        logging: process.env.NODE_ENV === 'development', // Logs solo en desarrollo
+        ssl: process.env.NODE_ENV === 'production' 
+          ? { rejectUnauthorized: false } // Para servicios como Railway, Render, etc.
+          : false,
     }),
     LotesModule,
     ProveedoresModule,
     ProductosModule,
     UsuariosModule,
     ProcesamientoModule,
-    DashboardModule],
+    DashboardModule,
+    SeedModule],
   controllers: [],
   providers: [],
 })
